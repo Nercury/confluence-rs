@@ -5,6 +5,20 @@
 <style>.sidebar { margin-top: 53px }</style>
 */
 
+/*!
+Access and modify [Atlassian Confluence](https://www.atlassian.com/software/confluence/) pages from Rust.
+
+## Working with this library
+
+To start, create a new `Session` by calling a `login` on it
+with your credentials.
+
+Internally, the `Session` struct stores the auth `token`
+and uses it when calling remote methods.
+
+The token will be destroyed (logout) when `Session` goes out of scope.
+*/
+
 #[macro_use] extern crate hyper;
 #[macro_use] extern crate log;
 extern crate xml;
