@@ -2,14 +2,19 @@
 #[macro_use] extern crate log;
 extern crate xml;
 extern crate xmltree;
+extern crate chrono;
 
 pub mod http;
 pub mod wsdl;
 pub mod rpser;
 
 mod space;
+mod page;
+mod transforms;
 
 pub use space::Space;
+pub use page::{ Page, PageSummary };
+pub use transforms::FromElement;
 
 use std::result;
 use std::io::{ Error as IoError };
@@ -22,11 +27,6 @@ use self::http::HttpError;
 const V2_API_RPC_PATH: &'static str = "/rpc/soap-axis/confluenceservice-v2?wsdl";
 
 /// Client's session.
-///
-/// Creating this session performs log-in to confluence api.
-///
-/// User will be logged out automatically when session is no longer used. Manual
-/// call to `logout` is not required.
 pub struct Session {
     wsdl: wsdl::Wsdl,
     token: String,
@@ -42,6 +42,7 @@ impl Session {
 
     /**
     Create new confluence session.
+
     ## Example
 
     ```no_run
@@ -80,7 +81,9 @@ impl Session {
         Ok(session)
     }
 
-    /// Log out out of confluence.
+    /// Explicitly log out out of confluence.
+    ///
+    /// This is done automatically at the end of Session's lifetime.
     pub fn logout(&self) -> Result<bool> {
 
         let response = try!(self.call(
@@ -101,7 +104,11 @@ impl Session {
     }
 
     /**
-    Get confluence's `Space`.
+    Returns a single Space.
+
+    If the spaceKey does not exist: earlier versions of Confluence will throw an Exception. Later versions (3.0+) will return a null object.
+
+    In this client the difference will be in error type.
 
     ## Example
 
@@ -122,23 +129,28 @@ impl Session {
                 .with(Element::node("spaceKey").with_text(space_key))
         ));
 
-        let page_return = try!(response.body.descend(&["getSpaceReturn"]));
+        let element = try!(response.body.descend(&["getSpaceReturn"]));
 
-        trace!("page response {:#?}", page_return);
+        trace!("getSpace response {:#?}", element);
 
-        Ok(Space {
-            description: try!(page_return.get_at_path(&["description"])).text,
-            home_page: try!(page_return.get_at_path(&["homePage"]).and_then(|e| e.as_long())),
-            key: try!(page_return.get_at_path(&["key"]).and_then(|e| e.as_string())),
-            name: try!(page_return.get_at_path(&["name"]).and_then(|e| e.as_string())),
-            space_group: try!(page_return.get_at_path(&["name"])).text,
-            space_type: try!(page_return.get_at_path(&["type"]).and_then(|e| e.as_string())),
-            url: try!(page_return.get_at_path(&["url"]).and_then(|e| e.as_string())),
-        })
+        Ok(try!(Space::from_element(element)))
     }
 
-    /// Get confluence's `Page`.
-    pub fn get_page_by_title(&self, space_key: &str, page_title: &str) -> Result<bool> {
+    /**
+    Returns a single Page.
+
+    ## Example
+
+    ```no_run
+    # let session = confluence::Session::login("https://confluence", "user", "pass").unwrap();
+    println!("Page: {:#?}",
+        session.get_page_by_title(
+            "SomeSpaceKey", "Page Title"
+        )
+    );
+    ```
+    */
+    pub fn get_page_by_title(&self, space_key: &str, page_title: &str) -> Result<Page> {
 
         let response = try!(self.call(
             Method::new("getPage")
@@ -147,14 +159,66 @@ impl Session {
                 .with(Element::node("pageTitle").with_text(page_title))
         ));
 
-        let page_return = try!(response.body.descend(&["getPageReturn"]));
+        let element = try!(response.body.descend(&["getPageReturn"]));
 
-        debug!("page response {:#?}", page_return);
+        debug!("getPage response {:#?}", element);
 
-        Ok(true)
+        Ok(try!(Page::from_element(element)))
     }
 
-    /// Call custom method on this session.
+    /**
+    Returns all the direct children of this page.
+
+    ## Example
+
+    ```no_run
+    # let session = confluence::Session::login("https://confluence", "user", "pass").unwrap();
+    println!("Page Summaries: {:#?}",
+        session.get_children(
+            123456
+        )
+    );
+    ```
+    */
+    pub fn get_children(&self, page_id: i64) -> Result<Vec<PageSummary>> {
+
+        let response = try!(self.call(
+            Method::new("getChildren")
+                .with(Element::node("token").with_text(self.token.clone()))
+                .with(Element::node("pageId").with_text(page_id.to_string()))
+        ));
+
+        let element = try!(response.body.descend(&["getChildrenReturn"]));
+
+        debug!("getChildren response {:#?}", element);
+
+        let mut summaries = vec![];
+
+        for element in element.children {
+            summaries.push(try!(PageSummary::from_element(element)));
+        }
+
+        Ok(summaries)
+    }
+
+    /// Call a custom method on this session.
+    ///
+    /// ## Usage
+    ///
+    /// The elements in `Method` struct here will be converted directly
+    /// into SOAP envelope's Body.
+    ///
+    /// The returned `Response`.`body` will contain the parsed Body element.
+    ///
+    /// ## Discussion
+    ///
+    /// So far only few methods have convenience wrappers here, so if you need to call [something
+    /// else](https://developer.atlassian.com/confdev/confluence-rest-api/confluence-xml-rpc-and-soap-apis/remote-confluence-methods),
+    /// it's not so convenient, but possible.
+    ///
+    /// If you need an example, look at how these convenience methods are implemented.
+    ///
+    /// Pull requests are welcome!
     pub fn call(&self, method: rpser::Method) -> Result<rpser::Response> {
         let url = match self.wsdl.operations.get(&method.name) {
             None => return Err(Error::MethodNotFoundInWsdl(method.name)),

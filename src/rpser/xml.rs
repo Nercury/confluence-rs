@@ -3,6 +3,7 @@
 use xmltree::Element;
 use std::collections::HashMap;
 use std::num::ParseIntError;
+use chrono::{ DateTime, UTC, ParseError };
 
 #[derive(Debug, PartialEq)]
 pub enum Error {
@@ -14,6 +15,8 @@ pub enum Error {
     ExpectedElementWithType { name: String, expected_type: String, given: Option<String> },
     /// Can't parse received element.
     ParseIntError { name: String, inner: ParseIntError },
+    /// Can't parse received element.
+    ParseDateTimeError { name: String, inner: ParseError },
 }
 
 /// Helper trait for building `xmltree::Element`.
@@ -73,10 +76,19 @@ pub trait BuildElement {
     fn get_at_path(&self, path: &[&str]) -> Result<Element, Error>;
 
     /// Extract the value of `long` type from the text.
-    fn as_long(&self) -> Result<u64, Error>;
+    fn as_long(&self) -> Result<i64, Error>;
+
+    /// Extract the value of `int` type from the text.
+    fn as_int(&self) -> Result<i32, Error>;
+
+    /// Extract the value of `boolean` type from the text.
+    fn as_boolean(&self) -> Result<bool, Error>;
 
     /// Extract the value of `string` type from the text.
     fn as_string(&self) -> Result<String, Error>;
+
+    /// Extract the value of `DateTime` type from the text.
+    fn as_datetime(&self) -> Result<DateTime<UTC>, Error>;
 }
 
 impl BuildElement for Element {
@@ -191,13 +203,16 @@ impl BuildElement for Element {
         }
     }
 
-    fn as_long(&self) -> Result<u64, Error> {
-        let text = match (self.attributes.get("type"), &self.text) {
-            (Some(value), &Some(ref text)) if value.ends_with("long") => text,
-            (other_type, _) => return Err(
-                Error::ExpectedElementWithType { name: self.name.clone(), expected_type: "*:long".into(), given: other_type.cloned() }
-            ),
-        };
+    fn as_int(&self) -> Result<i32, Error> {
+        let text = try!(get_typed_string(self, "int"));
+        Ok(match text.parse() {
+            Ok(ref value) => *value,
+            Err(e) => return Err(Error::ParseIntError { name: self.name.clone(), inner: e }),
+        })
+    }
+
+    fn as_long(&self) -> Result<i64, Error> {
+        let text = try!(get_typed_string(self, "long"));
         Ok(match text.parse() {
             Ok(ref value) => *value,
             Err(e) => return Err(Error::ParseIntError { name: self.name.clone(), inner: e }),
@@ -205,12 +220,28 @@ impl BuildElement for Element {
     }
 
     fn as_string(&self) -> Result<String, Error> {
-        let text = match (self.attributes.get("type"), &self.text) {
-            (Some(value), &Some(ref text)) if value.ends_with("string") => text,
-            (other_type, _) => return Err(
-                Error::ExpectedElementWithType { name: self.name.clone(), expected_type: "*:string".into(), given: other_type.cloned() }
-            ),
-        };
-        Ok(text.clone())
+        get_typed_string(self, "string")
     }
+
+    fn as_datetime(&self) -> Result<DateTime<UTC>, Error> {
+        let text = try!(get_typed_string(self, "dateTime"));
+        Ok(match text.parse::<DateTime<UTC>>() {
+            Ok(ref value) => *value,
+            Err(e) => return Err(Error::ParseDateTimeError { name: self.name.clone(), inner: e }),
+        })
+    }
+
+    fn as_boolean(&self) -> Result<bool, Error> {
+        let text = try!(get_typed_string(self, "boolean"));
+        Ok(text == "true")
+    }
+}
+
+fn get_typed_string(element: &Element, value_type: &str) -> Result<String, Error> {
+    Ok(match (element.attributes.get("type"), &element.text) {
+        (Some(value), &Some(ref text)) if value.ends_with(value_type) => text.clone(),
+        (other_type, _) => return Err(
+            Error::ExpectedElementWithType { name: element.name.clone(), expected_type: ["*:", value_type].concat(), given: other_type.cloned() }
+        ),
+    })
 }
