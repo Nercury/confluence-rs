@@ -6,6 +6,8 @@ Access and modify [Atlassian Confluence](https://www.atlassian.com/software/conf
 
 ## Usage
 
+Requires `Rust 1.4.0`.
+
 ### Add dependency
 
 Add dependency in your `Cargo.toml`:

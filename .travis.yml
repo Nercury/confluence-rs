@@ -13,7 +13,6 @@ matrix:
       env: DOC=true
     - rust: beta
     - rust: stable
-    - rust: 1.3.0
 
 after_success:
   - /bin/bash export_doc.sh
