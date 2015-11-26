@@ -47,3 +47,55 @@ pub struct PageSummary {
 	/// The url to view this page online
     pub url: String,
 }
+
+/// Page Object for creating a Page.
+#[derive(Debug)]
+pub struct UpdatePage {
+    /// The id of the page
+    pub id: Option<i64>,
+    /// The key of the space that this page belongs to
+    pub space: String,
+    /// The title of the page
+	pub title: String,
+    /// The page content
+    pub content: String,
+    /// The version number of this page
+    pub version: Option<i32>,
+    /// The id of the parent page
+	pub parent_id: Option<i64>
+}
+
+impl UpdatePage {
+    pub fn with_create_fields<S: Into<String>>(
+        parent_id: Option<i64>,
+        space: &str,
+        title: &str,
+        content: S
+    ) -> UpdatePage {
+        UpdatePage {
+            id: None,
+            space: space.into(),
+            title: title.into(),
+            content: content.into(),
+            version: None,
+            parent_id: parent_id,
+        }
+    }
+}
+
+impl From<Page> for UpdatePage {
+    fn from(other: Page) -> UpdatePage {
+        UpdatePage {
+            id: Some(other.id),
+            space: other.space,
+            title: other.title,
+            content: other.content,
+            version: Some(other.version),
+            parent_id: if other.parent_id == 0 {
+                None
+            } else {
+                Some(other.parent_id)
+            },
+        }
+    }
+}

@@ -13,7 +13,7 @@ mod page;
 mod transforms;
 
 pub use space::Space;
-pub use page::{ Page, PageSummary };
+pub use page::{ Page, PageSummary, UpdatePage };
 pub use transforms::FromElement;
 
 use std::result;
@@ -131,13 +131,11 @@ impl Session {
 
         let element = try!(response.body.descend(&["getSpaceReturn"]));
 
-        trace!("getSpace response {:#?}", element);
-
         Ok(try!(Space::from_element(element)))
     }
 
     /**
-    Returns a single Page.
+    Returns a single Page by space and title.
 
     ## Example
 
@@ -161,7 +159,130 @@ impl Session {
 
         let element = try!(response.body.descend(&["getPageReturn"]));
 
-        debug!("getPage response {:#?}", element);
+        Ok(try!(Page::from_element(element)))
+    }
+
+    /**
+    Returns a single Page by id.
+
+    ## Example
+
+    ```no_run
+    # let session = confluence::Session::login("https://confluence", "user", "pass").unwrap();
+    println!("Page: {:#?}",
+        session.get_page_by_id(
+            123456
+        )
+    );
+    ```
+    */
+    pub fn get_page_by_id(&self, page_id: i64) -> Result<Page> {
+
+        let response = try!(self.call(
+            Method::new("getPage")
+                .with(Element::node("token").with_text(self.token.clone()))
+                .with(Element::node("pageId").with_text(page_id.to_string()))
+        ));
+
+        let element = try!(response.body.descend(&["getPageReturn"]));
+
+        Ok(try!(Page::from_element(element)))
+    }
+
+    /**
+    Adds or updates a page.
+
+    # For adding
+
+    The Page given as an argument should have:
+
+    - (optional) parent_id
+    - space
+    - title
+    - content
+
+    fields at a minimum.
+
+    Use helper `UpdatePage::with_create_fields` to create such page.
+
+    ## Example
+
+    ```no_run
+    use confluence::UpdatePage;
+
+    # let session = confluence::Session::login("https://confluence", "user", "pass").unwrap();
+    session.store_page(
+        UpdatePage::with_create_fields(
+            None,
+            "SpaceKey",
+            "Page Title",
+            "<b>Works</b>"
+        )
+    );
+    ```
+
+    # For updating
+
+    The Page given should have:
+
+    - (optional) parent_id
+    - id
+    - space
+    - title
+    - content
+    - version
+
+    fields at a minimum.
+
+    Use method `into` on `Page` to convert it to `UpdatePage`.
+
+    ## Example
+
+    ```no_run
+    use confluence::UpdatePage;
+
+    # let session = confluence::Session::login("https://confluence", "user", "pass").unwrap();
+    let mut page = session.get_page_by_title(
+        "SomeSpaceKey", "Page Title"
+    ).unwrap();
+
+    page.title = "New Page Title".into();
+
+    session.store_page(page.into());
+    ```
+    */
+    pub fn store_page(&self, page: UpdatePage) -> Result<Page> {
+
+        let mut element_items = vec![
+            Element::node("space").with_text(page.space),
+            Element::node("title").with_text(page.title),
+            Element::node("content").with_text(page.content),
+        ];
+
+        if let Some(id) = page.id {
+            element_items.push(Element::node("id").with_text(id.to_string()));
+        }
+
+        if let Some(version) = page.version {
+            element_items.push(Element::node("version").with_text(version.to_string()));
+        }
+
+        if let Some(parent_id) = page.parent_id {
+            element_items.push(Element::node("parentId").with_text(parent_id.to_string()));
+        }
+
+        let response = try!(self.call(
+            Method::new("storePage")
+                .with(Element::node("token").with_text(self.token.clone()))
+                .with(
+                    Element::node("page")
+                        .with_children(
+                            element_items
+                        )
+                )
+        ));
+
+        let element = try!(response.body.descend(&["storePageReturn"]));
 
         Ok(try!(Page::from_element(element)))
     }
@@ -189,8 +310,6 @@ impl Session {
         ));
 
         let element = try!(response.body.descend(&["getChildrenReturn"]));
-
-        debug!("getChildren response {:#?}", element);
 
         let mut summaries = vec![];
 
