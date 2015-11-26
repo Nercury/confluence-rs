@@ -1,0 +1,22 @@
+sudo: false
+language: rust
+
+env:
+  global:
+    - CRATE=confluence
+
+matrix:
+  allow_failures:
+    - rust: nightly
+  include:
+    - rust: nightly
+      env: DOC=true
+    - rust: nightly
+    - rust: beta
+    - rust: stable
+    - rust: 1.2.0
+    - rust: 1.1.0
+    - rust: 1.0.0
+
+after_success:
+  - /bin/bash export_doc.sh

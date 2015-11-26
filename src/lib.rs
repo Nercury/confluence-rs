@@ -1,3 +1,10 @@
+/*!
+<a href="https://github.com/Nercury/confluence-rs">
+    <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub">
+</a>
+<style>.sidebar { margin-top: 53px }</style>
+*/
+
 #[macro_use] extern crate hyper;
 #[macro_use] extern crate log;
 extern crate xml;
