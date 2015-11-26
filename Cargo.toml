@@ -1,11 +1,12 @@
 [package]
 name = "confluence"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Nerijus Arlauskas <nercury@gmail.com>"]
 description = "Access and modify Atlassian Confluence pages from Rust"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Nercury/confluence-rs"
+documentation = "http://nercury.github.io/confluence-rs/confluence/index.html"
 
 [dependencies]
 xml-rs = "0.2"
