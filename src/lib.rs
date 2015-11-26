@@ -16,7 +16,7 @@ with your credentials.
 Internally, the `Session` struct stores the auth `token`
 and uses it when calling remote methods.
 
-The token will be destroyed (logout) when `Session` goes out of scope.
+The token will be destroyed (automatic logout) when `Session` goes out of scope.
 */
 
 #[macro_use] extern crate hyper;
