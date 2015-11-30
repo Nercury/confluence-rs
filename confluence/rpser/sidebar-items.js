@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["RpcError","Method parsing / response error."]],"mod":[["xml","Helper trait to deal with XML Element tree."]],"struct":[["Method","XML method representation."],["Response","XML response representation."]],"type":[["Result",""]]});

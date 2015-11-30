@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `confluence` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, confluence">
+
+    <title>confluence - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'confluence', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>confluence</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span><a id='src-0' class='srclink' href='../src/confluence/lib.rs.html#1-485' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p><a href="https://github.com/Nercury/confluence-rs">
+    <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub">
+</a>
+<style>.sidebar { margin-top: 53px }</style>
+Access and modify <a href="https://www.atlassian.com/software/confluence/">Atlassian Confluence</a> pages from Rust.</p>
+
+<h2 id='working-with-this-library' class='section-header'><a href='#working-with-this-library'>Working with this library</a></h2>
+<p>To start, create a new <code>Session</code> by calling a <code>login</code> on it
+with your credentials.</p>
+
+<p>Internally, the <code>Session</code> struct stores the auth <code>token</code>
+and uses it when calling remote methods.</p>
+
+<p>The token will be destroyed (automatic logout) when <code>Session</code> goes out of scope.</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='http/index.html'
+                               title='confluence::http'>http</a></td>
+                        <td class='docblock short'>
+                             <p>HTTP helpers.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='rpser/index.html'
+                               title='confluence::rpser'>rpser</a></td>
+                        <td class='docblock short'>
+                             <p>Remote procedule call implementation and serialization to XML.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='mod' href='wsdl/index.html'
+                               title='confluence::wsdl'>wsdl</a></td>
+                        <td class='docblock short'>
+                             <p>WSDL inspection helpers.</p>
+
+                        </td>
+                    </tr>
+                </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Page.html'
+                               title='confluence::Page'>Page</a></td>
+                        <td class='docblock short'>
+                             <p>Page.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.PageSummary.html'
+                               title='confluence::PageSummary'>PageSummary</a></td>
+                        <td class='docblock short'>
+                             <p>Page Summary.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.PageUpdateOptions.html'
+                               title='confluence::PageUpdateOptions'>PageUpdateOptions</a></td>
+                        <td class='docblock short'>
+                             <p>Options for updating the page.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Session.html'
+                               title='confluence::Session'>Session</a></td>
+                        <td class='docblock short'>
+                             <p>Client&#39;s session.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Space.html'
+                               title='confluence::Space'>Space</a></td>
+                        <td class='docblock short'>
+                             <p>Space.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.UpdatePage.html'
+                               title='confluence::UpdatePage'>UpdatePage</a></td>
+                        <td class='docblock short'>
+                             <p>Page Object for creating a Page.</p>
+
+                        </td>
+                    </tr>
+                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.Error.html'
+                               title='confluence::Error'>Error</a></td>
+                        <td class='docblock short'>
+                             <p>Confluence library error.</p>
+
+                        </td>
+                    </tr>
+                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='trait' href='trait.FromElement.html'
+                               title='confluence::FromElement'>FromElement</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.Result.html'
+                               title='confluence::Result'>Result</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "confluence";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

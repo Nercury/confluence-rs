@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `BuildElement` trait in crate `confluence`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, BuildElement">
+
+    <title>confluence::rpser::xml::BuildElement - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>confluence</a>::<wbr><a href='../index.html'>rpser</a>::<wbr><a href='index.html'>xml</a></p><script>window.sidebarCurrent = {name: 'BuildElement', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../../index.html'>confluence</a>::<wbr><a href='../index.html'>rpser</a>::<wbr><a href='index.html'>xml</a>::<wbr><a class='trait' href=''>BuildElement</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span><a id='src-227' class='srclink' href='../../../src/confluence/rpser/xml.rs.html#47-92' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait BuildElement {
+    fn <a href='#tymethod.cloned' class='fnname'>cloned</a>(&amp;self) -&gt; Self;
+    fn <a href='#tymethod.node' class='fnname'>node</a>&lt;S&gt;(name: S) -&gt; Self <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</span>;
+    fn <a href='#tymethod.with_name' class='fnname'>with_name</a>&lt;S&gt;(self, name: S) -&gt; Self <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</span>;
+    fn <a href='#tymethod.with_text' class='fnname'>with_text</a>&lt;S&gt;(self, text: S) -&gt; Self <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</span>;
+    fn <a href='#tymethod.with_attr' class='fnname'>with_attr</a>&lt;KS, VS&gt;(self, key: KS, value: VS) -&gt; Self <span class='where'>where KS: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;, VS: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</span>;
+    fn <a href='#tymethod.with_child' class='fnname'>with_child</a>(self, child: Self) -&gt; Self;
+    fn <a href='#tymethod.with_children' class='fnname'>with_children</a>&lt;I&gt;(self, children: I) -&gt; Self <span class='where'>where Self: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>, I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/trait.IntoIterator.html' title='core::iter::IntoIterator'>IntoIterator</a>&lt;Item=Self&gt;</span>;
+    fn <a href='#tymethod.with_children_from_iter' class='fnname'>with_children_from_iter</a>&lt;'r, I&gt;(self, children: I) -&gt; Self <span class='where'>where Self: 'r + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>, I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=&amp;'r Self&gt;</span>;
+    fn <a href='#tymethod.to_string' class='fnname'>to_string</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>;
+    fn <a href='#tymethod.descend' class='fnname'>descend</a>(self, path: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../../xmltree/struct.Element.html' title='xmltree::Element'>Element</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;;
+    fn <a href='#tymethod.descend_first' class='fnname'>descend_first</a>(self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../../xmltree/struct.Element.html' title='xmltree::Element'>Element</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;;
+    fn <a href='#tymethod.get_at_path' class='fnname'>get_at_path</a>(&amp;self, path: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../../xmltree/struct.Element.html' title='xmltree::Element'>Element</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;;
+    fn <a href='#tymethod.as_long' class='fnname'>as_long</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;;
+    fn <a href='#tymethod.as_int' class='fnname'>as_int</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;;
+    fn <a href='#tymethod.as_boolean' class='fnname'>as_boolean</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;;
+    fn <a href='#tymethod.as_string' class='fnname'>as_string</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;;
+    fn <a href='#tymethod.as_datetime' class='fnname'>as_datetime</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;<a class='struct' href='../../../chrono/offset/utc/struct.UTC.html' title='chrono::offset::utc::UTC'>UTC</a>&gt;, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;;
+}</pre><div class='docblock'><p>Helper trait for building <code>xmltree::Element</code>.</p>
+
+<p>Such convenience methods were not available in <code>xmltree::Element</code>, so they are added
+as a trait. To use them, you need to use this <code>BuildElement</code> trait.</p>
+
+<h2 id='example' class='section-header'><a href='#example'>Example</a></h2><pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>xmltree</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>confluence</span>;
+
+<span class='kw'>use</span> <span class='ident'>xmltree</span>::<span class='ident'>Element</span>;
+<span class='kw'>use</span> <span class='ident'>confluence</span>::<span class='ident'>rpser</span>::<span class='ident'>xml</span>::<span class='ident'>BuildElement</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(
+        <span class='ident'>Element</span>::<span class='ident'>node</span>(<span class='string'>&quot;tag&quot;</span>)
+            .<span class='ident'>with_child</span>(
+                <span class='ident'>Element</span>::<span class='ident'>node</span>(<span class='string'>&quot;hello&quot;</span>).<span class='ident'>with_text</span>(<span class='string'>&quot;world&quot;</span>)
+            )
+            .<span class='ident'>to_string</span>(),
+        <span class='string'>&quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n&lt;tag&gt;&lt;hello&gt;world&lt;/hello&gt;&lt;/tag&gt;&quot;</span>
+    );
+}</pre>
+</div>
+            <h2 id='required-methods'>Required Methods</h2>
+            <div class='methods'>
+        <h3 id='tymethod.cloned' class='method stab '><code>fn <a href='#tymethod.cloned' class='fnname'>cloned</a>(&amp;self) -&gt; Self</code></h3><div class='docblock'><p>The missing <code>clone</code> implementation for <code>xmltree::Element</code>.</p>
+</div><h3 id='tymethod.node' class='method stab '><code>fn <a href='#tymethod.node' class='fnname'>node</a>&lt;S&gt;(name: S) -&gt; Self <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</span></code></h3><div class='docblock'><p>Create empty node.</p>
+</div><h3 id='tymethod.with_name' class='method stab '><code>fn <a href='#tymethod.with_name' class='fnname'>with_name</a>&lt;S&gt;(self, name: S) -&gt; Self <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</span></code></h3><div class='docblock'><p>Modify node&#39;s name.</p>
+</div><h3 id='tymethod.with_text' class='method stab '><code>fn <a href='#tymethod.with_text' class='fnname'>with_text</a>&lt;S&gt;(self, text: S) -&gt; Self <span class='where'>where S: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</span></code></h3><div class='docblock'><p>Modify node&#39;s text.</p>
+</div><h3 id='tymethod.with_attr' class='method stab '><code>fn <a href='#tymethod.with_attr' class='fnname'>with_attr</a>&lt;KS, VS&gt;(self, key: KS, value: VS) -&gt; Self <span class='where'>where KS: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;, VS: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</span></code></h3><div class='docblock'><p>Add attribute.</p>
+</div><h3 id='tymethod.with_child' class='method stab '><code>fn <a href='#tymethod.with_child' class='fnname'>with_child</a>(self, child: Self) -&gt; Self</code></h3><div class='docblock'><p>Add child.</p>
+</div><h3 id='tymethod.with_children' class='method stab '><code>fn <a href='#tymethod.with_children' class='fnname'>with_children</a>&lt;I&gt;(self, children: I) -&gt; Self <span class='where'>where Self: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>, I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/trait.IntoIterator.html' title='core::iter::IntoIterator'>IntoIterator</a>&lt;Item=Self&gt;</span></code></h3><div class='docblock'><p>Add children.</p>
+</div><h3 id='tymethod.with_children_from_iter' class='method stab '><code>fn <a href='#tymethod.with_children_from_iter' class='fnname'>with_children_from_iter</a>&lt;'r, I&gt;(self, children: I) -&gt; Self <span class='where'>where Self: 'r + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>, I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=&amp;'r Self&gt;</span></code></h3><div class='docblock'><p>Add children from iterator.</p>
+</div><h3 id='tymethod.to_string' class='method stab '><code>fn <a href='#tymethod.to_string' class='fnname'>to_string</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h3><div class='docblock'><p>Convert to string (xml).</p>
+</div><h3 id='tymethod.descend' class='method stab '><code>fn <a href='#tymethod.descend' class='fnname'>descend</a>(self, path: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../../xmltree/struct.Element.html' title='xmltree::Element'>Element</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;</code></h3><div class='docblock'><p>Descend into specified child element, destroying the parent.</p>
+</div><h3 id='tymethod.descend_first' class='method stab '><code>fn <a href='#tymethod.descend_first' class='fnname'>descend_first</a>(self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../../xmltree/struct.Element.html' title='xmltree::Element'>Element</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;</code></h3><div class='docblock'><p>Descend into first child element, destroying the parent.</p>
+</div><h3 id='tymethod.get_at_path' class='method stab '><code>fn <a href='#tymethod.get_at_path' class='fnname'>get_at_path</a>(&amp;self, path: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../../xmltree/struct.Element.html' title='xmltree::Element'>Element</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;</code></h3><div class='docblock'><p>Get clone of child element at path.</p>
+</div><h3 id='tymethod.as_long' class='method stab '><code>fn <a href='#tymethod.as_long' class='fnname'>as_long</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;</code></h3><div class='docblock'><p>Extract the value of <code>long</code> type from the text.</p>
+</div><h3 id='tymethod.as_int' class='method stab '><code>fn <a href='#tymethod.as_int' class='fnname'>as_int</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;</code></h3><div class='docblock'><p>Extract the value of <code>int</code> type from the text.</p>
+</div><h3 id='tymethod.as_boolean' class='method stab '><code>fn <a href='#tymethod.as_boolean' class='fnname'>as_boolean</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;</code></h3><div class='docblock'><p>Extract the value of <code>boolean</code> type from the text.</p>
+</div><h3 id='tymethod.as_string' class='method stab '><code>fn <a href='#tymethod.as_string' class='fnname'>as_string</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;</code></h3><div class='docblock'><p>Extract the value of <code>string</code> type from the text.</p>
+</div><h3 id='tymethod.as_datetime' class='method stab '><code>fn <a href='#tymethod.as_datetime' class='fnname'>as_datetime</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;<a class='struct' href='../../../chrono/offset/utc/struct.UTC.html' title='chrono::offset::utc::UTC'>UTC</a>&gt;, <a class='enum' href='../../../confluence/rpser/xml/enum.Error.html' title='confluence::rpser::xml::Error'>Error</a>&gt;</code></h3><div class='docblock'><p>Extract the value of <code>DateTime</code> type from the text.</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl <a class='trait' href='../../../confluence/rpser/xml/trait.BuildElement.html' title='confluence::rpser::xml::BuildElement'>BuildElement</a> for <a class='struct' href='../../../xmltree/struct.Element.html' title='xmltree::Element'>Element</a></code></li>
+</ul><script type="text/javascript" async
+                              src="../../../implementors/confluence/rpser/xml/trait.BuildElement.js">
+                      </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "confluence";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

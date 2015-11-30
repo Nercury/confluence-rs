@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Element","Represents an XML element."]]});

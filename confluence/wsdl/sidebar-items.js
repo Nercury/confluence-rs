@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["fetch","Fetch WSDL from specified URL and store results in `Wsdl` structure."]],"struct":[["Operation","WSDL operation info."],["Wsdl","WSDL document."]]});

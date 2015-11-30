@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Session` struct in crate `confluence`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Session">
+
+    <title>confluence::Session - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>confluence</a></p><script>window.sidebarCurrent = {name: 'Session', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>confluence</a>::<wbr><a class='struct' href=''>Session</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span><a id='src-763' class='srclink' href='../src/confluence/lib.rs.html#51-54' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Session {
+    // some fields omitted
+}</pre><div class='docblock'><p>Client&#39;s session.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../confluence/struct.Session.html' title='confluence::Session'>Session</a></code></h3><div class='impl-items'><h4 id='method.login' class='method'><code>fn <a href='#method.login' class='fnname'>login</a>(url: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, user: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, pass: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='struct' href='../confluence/struct.Session.html' title='confluence::Session'>Session</a>&gt;</code></h4>
+<div class='docblock'><p>Create new confluence session.</p>
+
+<h2 id='example' class='section-header'><a href='#example'>Example</a></h2><pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> <span class='ident'>confluence</span>::<span class='ident'>Session</span>::<span class='ident'>login</span>(
+    <span class='string'>&quot;https://confluence&quot;</span>,
+    <span class='string'>&quot;user&quot;</span>,
+    <span class='string'>&quot;pass&quot;</span>
+).<span class='ident'>unwrap</span>();</pre>
+</div><h4 id='method.logout' class='method'><code>fn <a href='#method.logout' class='fnname'>logout</a>(&amp;self) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>&gt;</code></h4>
+<div class='docblock'><p>Explicitly log out out of confluence.</p>
+
+<p>This is done automatically at the end of Session&#39;s lifetime.</p>
+</div><h4 id='method.get_space' class='method'><code>fn <a href='#method.get_space' class='fnname'>get_space</a>(&amp;self, space_key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='struct' href='../confluence/struct.Space.html' title='confluence::Space'>Space</a>&gt;</code></h4>
+<div class='docblock'><p>Returns a single Space.</p>
+
+<p>If the spaceKey does not exist: earlier versions of Confluence will throw an Exception. Later versions (3.0+) will return a null object.</p>
+
+<p>In this client the difference will be in error type.</p>
+
+<h2 id='example' class='section-header'><a href='#example'>Example</a></h2><pre class='rust rust-example-rendered'>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Space: {:#?}&quot;</span>,
+    <span class='ident'>session</span>.<span class='ident'>get_space</span>(
+        <span class='string'>&quot;SomeSpaceKey&quot;</span>
+    )
+);</pre>
+</div><h4 id='method.get_page_by_title' class='method'><code>fn <a href='#method.get_page_by_title' class='fnname'>get_page_by_title</a>(&amp;self, space_key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, page_title: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='struct' href='../confluence/struct.Page.html' title='confluence::Page'>Page</a>&gt;</code></h4>
+<div class='docblock'><p>Returns a single Page by space and title.</p>
+
+<h2 id='example' class='section-header'><a href='#example'>Example</a></h2><pre class='rust rust-example-rendered'>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Page: {:#?}&quot;</span>,
+    <span class='ident'>session</span>.<span class='ident'>get_page_by_title</span>(
+        <span class='string'>&quot;SomeSpaceKey&quot;</span>, <span class='string'>&quot;Page Title&quot;</span>
+    )
+);</pre>
+</div><h4 id='method.get_page_by_id' class='method'><code>fn <a href='#method.get_page_by_id' class='fnname'>get_page_by_id</a>(&amp;self, page_id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='struct' href='../confluence/struct.Page.html' title='confluence::Page'>Page</a>&gt;</code></h4>
+<div class='docblock'><p>Returns a single Page by id.</p>
+
+<h2 id='example' class='section-header'><a href='#example'>Example</a></h2><pre class='rust rust-example-rendered'>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Page: {:#?}&quot;</span>,
+    <span class='ident'>session</span>.<span class='ident'>get_page_by_id</span>(
+        <span class='number'>123456</span>
+    )
+);</pre>
+</div><h4 id='method.store_page' class='method'><code>fn <a href='#method.store_page' class='fnname'>store_page</a>(&amp;self, page: <a class='struct' href='../confluence/struct.UpdatePage.html' title='confluence::UpdatePage'>UpdatePage</a>) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='struct' href='../confluence/struct.Page.html' title='confluence::Page'>Page</a>&gt;</code></h4>
+<div class='docblock'><p>Adds or updates a page.</p>
+
+<h1 id='for-adding' class='section-header'><a href='#for-adding'>For adding</a></h1>
+<p>The Page given as an argument should have:</p>
+
+<ul>
+<li>(optional) parent_id</li>
+<li>space</li>
+<li>title</li>
+<li>content</li>
+</ul>
+
+<p>fields at a minimum.</p>
+
+<p>Use helper <code>UpdatePage::with_create_fields</code> to create such page.</p>
+
+<h2 id='example' class='section-header'><a href='#example'>Example</a></h2><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>confluence</span>::<span class='ident'>UpdatePage</span>;
+
+<span class='ident'>session</span>.<span class='ident'>store_page</span>(
+    <span class='ident'>UpdatePage</span>::<span class='ident'>with_create_fields</span>(
+        <span class='prelude-val'>None</span>,
+        <span class='string'>&quot;SpaceKey&quot;</span>,
+        <span class='string'>&quot;Page Title&quot;</span>,
+        <span class='string'>&quot;&lt;b&gt;Works&lt;/b&gt;&quot;</span>
+    )
+);</pre>
+
+<h1 id='for-updating' class='section-header'><a href='#for-updating'>For updating</a></h1>
+<p>The Page given should have:</p>
+
+<ul>
+<li>(optional) parent_id</li>
+<li>id</li>
+<li>space</li>
+<li>title</li>
+<li>content</li>
+<li>version</li>
+</ul>
+
+<p>fields at a minimum.</p>
+
+<p>Use method <code>into</code> on <code>Page</code> to convert it to <code>UpdatePage</code>.</p>
+
+<h2 id='example-1' class='section-header'><a href='#example-1'>Example</a></h2><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>confluence</span>::<span class='ident'>UpdatePage</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>page</span> <span class='op'>=</span> <span class='ident'>session</span>.<span class='ident'>get_page_by_title</span>(
+    <span class='string'>&quot;SomeSpaceKey&quot;</span>, <span class='string'>&quot;Page Title&quot;</span>
+).<span class='ident'>unwrap</span>();
+
+<span class='ident'>page</span>.<span class='ident'>title</span> <span class='op'>=</span> <span class='string'>&quot;New Page Title&quot;</span>.<span class='ident'>into</span>();
+
+<span class='ident'>session</span>.<span class='ident'>store_page</span>(<span class='ident'>page</span>.<span class='ident'>into</span>());</pre>
+</div><h4 id='method.update_page' class='method'><code>fn <a href='#method.update_page' class='fnname'>update_page</a>(&amp;self, page: <a class='struct' href='../confluence/struct.UpdatePage.html' title='confluence::UpdatePage'>UpdatePage</a>, options: <a class='struct' href='../confluence/struct.PageUpdateOptions.html' title='confluence::PageUpdateOptions'>PageUpdateOptions</a>) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='struct' href='../confluence/struct.Page.html' title='confluence::Page'>Page</a>&gt;</code></h4>
+<div class='docblock'><p>Updates the page.</p>
+
+<p>Same as <code>store_page</code>, but with additional update options parameter.</p>
+</div><h4 id='method.get_children' class='method'><code>fn <a href='#method.get_children' class='fnname'>get_children</a>(&amp;self, page_id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../confluence/struct.PageSummary.html' title='confluence::PageSummary'>PageSummary</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Returns all the direct children of this page.</p>
+
+<h2 id='example' class='section-header'><a href='#example'>Example</a></h2><pre class='rust rust-example-rendered'>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Page Summaries: {:#?}&quot;</span>,
+    <span class='ident'>session</span>.<span class='ident'>get_children</span>(
+        <span class='number'>123456</span>
+    )
+);</pre>
+</div><h4 id='method.call' class='method'><code>fn <a href='#method.call' class='fnname'>call</a>(&amp;self, method: <a class='struct' href='../confluence/rpser/struct.Method.html' title='confluence::rpser::Method'>Method</a>) -&gt; <a class='type' href='../confluence/type.Result.html' title='confluence::Result'>Result</a>&lt;<a class='struct' href='../confluence/rpser/struct.Response.html' title='confluence::rpser::Response'>Response</a>&gt;</code></h4>
+<div class='docblock'><p>Call a custom method on this session.</p>
+
+<h2 id='usage' class='section-header'><a href='#usage'>Usage</a></h2>
+<p>The elements in <code>Method</code> struct here will be converted directly
+into SOAP envelope&#39;s Body.</p>
+
+<p>The returned <code>Response</code>.<code>body</code> will contain the parsed Body element.</p>
+
+<h2 id='discussion' class='section-header'><a href='#discussion'>Discussion</a></h2>
+<p>So far only few methods have convenience wrappers here, so if you need to call <a href="https://developer.atlassian.com/confdev/confluence-rest-api/confluence-xml-rpc-and-soap-apis/remote-confluence-methods">something
+else</a>,
+it&#39;s not so convenient, but possible.</p>
+
+<p>If you need an example, look at how these convenience methods are implemented.</p>
+
+<p>Pull requests are welcome!</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../confluence/struct.Session.html' title='confluence::Session'>Session</a></code></h3><div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "confluence";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
