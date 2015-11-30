@@ -65,6 +65,31 @@ pub struct UpdatePage {
 	pub parent_id: Option<i64>
 }
 
+/// Options for updating the page.
+#[derive(Debug)]
+pub struct PageUpdateOptions {
+    // Edit comment for the updated page
+    pub version_comment: Option<String>,
+    // Is this update a 'minor edit'? (default value: false)
+    pub minor_edit: bool,
+}
+
+impl PageUpdateOptions {
+    pub fn new_minor() -> PageUpdateOptions {
+        PageUpdateOptions {
+            version_comment: None,
+            minor_edit: true,
+        }
+    }
+
+    pub fn new_minor_with_comment<S: Into<String>>(comment: S) -> PageUpdateOptions {
+        PageUpdateOptions {
+            version_comment: Some(comment.into()),
+            minor_edit: true,
+        }
+    }
+}
+
 impl UpdatePage {
     pub fn with_create_fields<S: Into<String>>(
         parent_id: Option<i64>,

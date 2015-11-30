@@ -34,7 +34,7 @@ mod page;
 mod transforms;
 
 pub use space::Space;
-pub use page::{ Page, PageSummary, UpdatePage };
+pub use page::{ Page, PageSummary, UpdatePage, PageUpdateOptions };
 pub use transforms::FromElement;
 
 use std::result;
@@ -304,6 +304,67 @@ impl Session {
         ));
 
         let element = try!(response.body.descend(&["storePageReturn"]));
+
+        Ok(try!(Page::from_element(element)))
+    }
+
+    /**
+    Updates the page.
+
+    Same as `store_page`, but with additional update options parameter.
+    */
+    pub fn update_page(&self, page: UpdatePage, options: PageUpdateOptions) -> Result<Page> {
+
+        let mut element_items = vec![
+            Element::node("space").with_text(page.space),
+            Element::node("title").with_text(page.title),
+            Element::node("content").with_text(page.content),
+        ];
+
+        if let Some(id) = page.id {
+            element_items.push(Element::node("id").with_text(id.to_string()));
+        }
+
+        if let Some(version) = page.version {
+            element_items.push(Element::node("version").with_text(version.to_string()));
+        }
+
+        if let Some(parent_id) = page.parent_id {
+            element_items.push(Element::node("parentId").with_text(parent_id.to_string()));
+        }
+
+        let mut update_options = vec![];
+
+        if let Some(comment) = options.version_comment {
+            update_options.push(Element::node("versionComment").with_text(comment));
+        }
+
+        update_options.push(Element::node("minorEdit").with_text(
+            if options.minor_edit {
+                "true"
+            } else {
+                "false"
+            }
+        ));
+
+        let response = try!(self.call(
+            Method::new("updatePage")
+                .with(Element::node("token").with_text(self.token.clone()))
+                .with(
+                    Element::node("page")
+                        .with_children(
+                            element_items
+                        )
+                )
+                .with(
+                    Element::node("pageUpdateOptions")
+                        .with_children(
+                            update_options
+                        )
+                )
+        ));
+
+        let element = try!(response.body.descend(&["updatePageReturn"]));
 
         Ok(try!(Page::from_element(element)))
     }
