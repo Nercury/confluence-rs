@@ -36,12 +36,8 @@ pub fn fetch(url: &str) -> http::Result<Wsdl> {
                         },
                         _ => (),
                     }
-                    //println!("{}+{}+{:?}+{:?}", indent(depth), name, attributes, namespace);
                 }
             }
-            // Ok(XmlEvent::EndElement { name }) => {
-            //     println!("{}-{}", indent(depth), name);
-            // }
             Err(e) => {
                 error!("Error: {}", e);
                 break;
