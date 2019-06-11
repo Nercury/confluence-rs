@@ -1,4 +1,5 @@
-use chrono::{ DateTime, UTC };
+use chrono::offset::Utc;
+use chrono::DateTime;
 
 /// Page.
 #[derive(Debug)]
@@ -7,22 +8,22 @@ pub struct Page {
     pub id: i64,
     /// The key of the space that this page belongs to
     pub space: String,
-	/// The id of the parent page
-	pub parent_id: i64,
+    /// The id of the parent page
+    pub parent_id: i64,
     /// The title of the page
-	pub title: String,
-	/// The url to view this page online
+    pub title: String,
+    /// The url to view this page online
     pub url: String,
     /// The version number of this page
     pub version: i32,
-	/// The page content
+    /// The page content
     pub content: String,
     /// Timestamp page was created
-    pub created: DateTime<UTC>,
+    pub created: DateTime<Utc>,
     /// Username of the creator
     pub creator: String,
     /// Timestamp page was modified
-    pub modified: DateTime<UTC>,
+    pub modified: DateTime<Utc>,
     /// Username of the page's last modifier
     pub modifier: String,
     /// Whether or not this page is the space's homepage
@@ -40,11 +41,11 @@ pub struct PageSummary {
     pub id: i64,
     /// The key of the space that this page belongs to
     pub space: String,
-	/// The id of the parent page
-	pub parent_id: i64,
+    /// The id of the parent page
+    pub parent_id: i64,
     /// The title of the page
-	pub title: String,
-	/// The url to view this page online
+    pub title: String,
+    /// The url to view this page online
     pub url: String,
 }
 
@@ -56,13 +57,13 @@ pub struct UpdatePage {
     /// The key of the space that this page belongs to
     pub space: String,
     /// The title of the page
-	pub title: String,
+    pub title: String,
     /// The page content
     pub content: String,
     /// The version number of this page
     pub version: Option<i32>,
     /// The id of the parent page
-	pub parent_id: Option<i64>
+    pub parent_id: Option<i64>,
 }
 
 /// Options for updating the page.
@@ -95,7 +96,7 @@ impl UpdatePage {
         parent_id: Option<i64>,
         space: &str,
         title: &str,
-        content: S
+        content: S,
     ) -> UpdatePage {
         UpdatePage {
             id: None,

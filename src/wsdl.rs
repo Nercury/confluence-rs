@@ -1,8 +1,8 @@
 //! WSDL inspection helpers.
 
+use http;
 use std::collections::HashMap;
 use xml::reader::{EventReader, XmlEvent};
-use http;
 
 /// WSDL operation info.
 #[derive(Debug)]
@@ -26,14 +26,24 @@ pub fn fetch(url: &str) -> http::Result<Wsdl> {
     let parser = EventReader::new(&mut bytes);
     for e in parser {
         match e {
-            Ok(XmlEvent::StartElement { ref name, ref attributes, ref namespace }) => {
+            Ok(XmlEvent::StartElement {
+                ref name,
+                ref attributes,
+                ref namespace,
+            }) => {
                 if name.to_string().contains("wsdl:operation") {
-                    match (attributes.iter().find(|a| a.name.to_string() == "name"), namespace.get("impl")) {
+                    match (
+                        attributes.iter().find(|a| a.name.to_string() == "name"),
+                        namespace.get("impl"),
+                    ) {
                         (Some(name_attribute), Some(impl_url)) => {
-                            operations.insert(name_attribute.value.to_string(), Operation {
-                                url: impl_url.into(),
-                            });
-                        },
+                            operations.insert(
+                                name_attribute.value.to_string(),
+                                Operation {
+                                    url: impl_url.into(),
+                                },
+                            );
+                        }
                         _ => (),
                     }
                 }
@@ -47,6 +57,6 @@ pub fn fetch(url: &str) -> http::Result<Wsdl> {
     }
 
     Ok(Wsdl {
-        operations: operations
+        operations: operations,
     })
 }
