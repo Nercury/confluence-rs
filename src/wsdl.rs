@@ -32,20 +32,17 @@ pub fn fetch(url: &str) -> http::Result<Wsdl> {
                 ref namespace,
             }) => {
                 if name.to_string().contains("wsdl:operation") {
-                    match (
+                    if let (Some(name_attribute), Some(impl_url)) = (
                         attributes.iter().find(|a| a.name.to_string() == "name"),
                         namespace.get("impl"),
                     ) {
-                        (Some(name_attribute), Some(impl_url)) => {
-                            operations.insert(
-                                name_attribute.value.to_string(),
-                                Operation {
-                                    url: impl_url.into(),
-                                },
-                            );
-                        }
-                        _ => (),
-                    }
+                          operations.insert(
+                              name_attribute.value.to_string(),
+                              Operation {
+                                  url: impl_url.into(),
+                              },
+                           );
+                     }
                 }
             }
             Err(e) => {
@@ -57,6 +54,6 @@ pub fn fetch(url: &str) -> http::Result<Wsdl> {
     }
 
     Ok(Wsdl {
-        operations: operations,
+        operations,
     })
 }

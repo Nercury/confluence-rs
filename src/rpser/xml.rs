@@ -45,7 +45,7 @@ pub enum Error {
 ///                 Element::node("hello").with_text("world")
 ///             )
 ///             .to_string(),
-///         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<tag><hello>world</hello></tag>"
+///         "<?xml version=\"1.0\" encoding=\"UTF-8\"?><tag><hello>world</hello></tag>"
 ///     );
 /// }
 /// ```
@@ -192,7 +192,7 @@ impl BuildElement for Element {
     }
 
     fn descend(self, path: &[&str]) -> Result<Element, Error> {
-        if path.len() == 0 {
+        if path.is_empty() {
             Ok(self)
         } else {
             for child in self.children {
@@ -216,7 +216,7 @@ impl BuildElement for Element {
     }
 
     fn descend_first(mut self) -> Result<Element, Error> {
-        if self.children.len() == 0 {
+        if self.children.is_empty() {
             Err(Error::ExpectedNotEmpty { parent: self.name })
         } else {
             Ok(self.children.remove(0))
@@ -224,7 +224,7 @@ impl BuildElement for Element {
     }
 
     fn get_at_path(&self, path: &[&str]) -> Result<Element, Error> {
-        if path.len() == 0 {
+        if path.is_empty() {
             Ok(self.cloned())
         } else {
             for child in &self.children {

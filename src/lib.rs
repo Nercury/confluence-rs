@@ -46,7 +46,7 @@ use self::rpser::xml::BuildElement;
 use self::rpser::{Method, RpcError};
 use xmltree::Element;
 
-const V2_API_RPC_PATH: &'static str = "/rpc/soap-axis/confluenceservice-v2?wsdl";
+const V2_API_RPC_PATH: &str = "/rpc/soap-axis/confluenceservice-v2?wsdl";
 
 /// Client's session.
 pub struct Session {
@@ -77,7 +77,7 @@ impl Session {
     pub fn login(url: &str, user: &str, pass: &str) -> Result<Session> {
         debug!("logging in at url {:?} with user {:?}", url, user);
 
-        let url = if url.ends_with("/") {
+        let url = if url.ends_with('/') {
             &url[..url.len() - 1]
         } else {
             url
@@ -88,7 +88,7 @@ impl Session {
 
         let wsdl = try!(wsdl::fetch(&wsdl_url));
         let mut session = Session {
-            wsdl: wsdl,
+            wsdl,
             token: String::new(),
         };
 
@@ -436,7 +436,7 @@ pub enum Error {
     ReceivedNoLoginToken,
     Io(IoError),
     Http(HttpError),
-    Rpc(RpcError),
+    Rpc(Box<RpcError>),
 }
 
 impl From<HttpError> for Error {
@@ -447,7 +447,7 @@ impl From<HttpError> for Error {
 
 impl From<RpcError> for Error {
     fn from(other: RpcError) -> Error {
-        Error::Rpc(other)
+        Error::Rpc(Box::new(other))
     }
 }
 

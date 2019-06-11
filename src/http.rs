@@ -26,7 +26,7 @@ pub fn get(url: &str) -> Result<Response> {
 /// Perform a SOAP action to specified URL.
 pub fn soap_action(url: &str, action: &str, xml: &str) -> Result<Response> {
     let soap_action = HeaderName::from_bytes(b"SOAPAction").unwrap();
-    let soap_value = HeaderValue::from_str(action.into()).unwrap();
+    let soap_value = HeaderValue::from_str(action).unwrap();
     let mut hmap = HeaderMap::new();
     hmap.insert(CONTENT_TYPE, "text/xml; charset=utf-8".parse().unwrap());
     hmap.insert(soap_action, soap_value);

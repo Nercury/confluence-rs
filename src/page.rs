@@ -104,7 +104,7 @@ impl UpdatePage {
             title: title.into(),
             content: content.into(),
             version: None,
-            parent_id: parent_id,
+            parent_id,
         }
     }
 }

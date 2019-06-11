@@ -72,11 +72,9 @@ impl Response {
         if element.name == "Fault" {
             return Err(RpcError::Fault {
                 fault_code: try!(element.get_at_path(&["faultcode"]))
-                    .text
-                    .unwrap_or(String::new()),
+                    .text.unwrap_or_default(),
                 fault_string: try!(element.get_at_path(&["faultstring"]))
-                    .text
-                    .unwrap_or(String::new()),
+                    .text.unwrap_or_default(),
                 fault_detail: try!(element.get_at_path(&["detail"])),
             });
         }
