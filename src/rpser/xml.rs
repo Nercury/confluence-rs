@@ -187,7 +187,8 @@ impl BuildElement for Element {
 
     fn to_string(&self) -> String {
         let mut xml = Vec::new();
-        self.write(&mut xml).unwrap();
+        self.write(&mut xml)
+            .unwrap_or_else(|e| println!("Unable to write xml: {:?}", e));
         String::from_utf8_lossy(&xml).into_owned()
     }
 

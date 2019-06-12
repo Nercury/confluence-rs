@@ -72,10 +72,12 @@ impl Response {
         if element.name == "Fault" {
             return Err(RpcError::Fault {
                 fault_code: try!(element.get_at_path(&["faultcode"]))
-                    .text.unwrap_or_default(),
+                    .text
+                    .unwrap_or_default(),
                 fault_string: try!(element.get_at_path(&["faultstring"]))
-                    .text.unwrap_or_default(),
-                fault_detail: try!(element.get_at_path(&["detail"])),
+                    .text
+                    .unwrap_or_default(),
+                fault_detail: Box::new(try!(element.get_at_path(&["detail"]))),
             });
         }
 
@@ -95,7 +97,7 @@ pub enum RpcError {
     Fault {
         fault_code: String,
         fault_string: String,
-        fault_detail: Element,
+        fault_detail: Box<Element>,
     },
     XmlError {
         error: self::xml::Error,

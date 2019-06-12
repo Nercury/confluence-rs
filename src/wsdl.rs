@@ -36,13 +36,13 @@ pub fn fetch(url: &str) -> http::Result<Wsdl> {
                         attributes.iter().find(|a| a.name.to_string() == "name"),
                         namespace.get("impl"),
                     ) {
-                          operations.insert(
-                              name_attribute.value.to_string(),
-                              Operation {
-                                  url: impl_url.into(),
-                              },
-                           );
-                     }
+                        operations.insert(
+                            name_attribute.value.to_string(),
+                            Operation {
+                                url: impl_url.into(),
+                            },
+                        );
+                    }
                 }
             }
             Err(e) => {
@@ -53,7 +53,5 @@ pub fn fetch(url: &str) -> http::Result<Wsdl> {
         }
     }
 
-    Ok(Wsdl {
-        operations,
-    })
+    Ok(Wsdl { operations })
 }
