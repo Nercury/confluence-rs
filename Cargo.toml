@@ -1,12 +1,12 @@
 [package]
 name = "confluence"
-version = "0.3.0"
-authors = ["Nerijus Arlauskas <nercury@gmail.com>"]
+version = "0.4.0"
+authors = ["The confluence-rs Developers"]
 description = "Access and modify Atlassian Confluence pages from Rust"
-license = "MIT"
+license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/Nercury/confluence-rs"
-documentation = "http://nercury.github.io/confluence-rs/confluence/index.html"
+documentation = "https://docs.rs/crate/confluence/0.3.0"
 keywords = ["confluence", "atlassian", "api", "soap", "wiki"]
 categories = ["api-bindings"]
 
