@@ -1,11 +1,4 @@
 /*!
-<a href="https://github.com/Nercury/confluence-rs">
-    <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub">
-</a>
-<style>.sidebar { margin-top: 53px }</style>
-*/
-
-/*!
 Access and modify [Atlassian Confluence](https://www.atlassian.com/software/confluence/) pages from Rust.
 
 ## Working with this library

@@ -1,6 +1,6 @@
 [package]
 name = "confluence"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["The confluence-rs Developers"]
 description = "Access and modify Atlassian Confluence pages from Rust"
 license = "MIT OR Apache-2.0"
