@@ -10,9 +10,5 @@ matrix:
     - rust: nightly
   include:
     - rust: nightly
-      env: DOC=true
     - rust: beta
     - rust: stable
-
-after_success:
-  - /bin/bash export_doc.sh
