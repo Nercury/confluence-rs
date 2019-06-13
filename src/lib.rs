@@ -19,33 +19,34 @@ and uses it when calling remote methods.
 The token will be destroyed (automatic logout) when `Session` goes out of scope.
 */
 
-#[macro_use] extern crate hyper;
-#[macro_use] extern crate log;
+#[macro_use]
+extern crate log;
+extern crate chrono;
+extern crate reqwest;
 extern crate xml;
 extern crate xmltree;
-extern crate chrono;
 
 pub mod http;
-pub mod wsdl;
 pub mod rpser;
+pub mod wsdl;
 
-mod space;
 mod page;
+mod space;
 mod transforms;
 
+pub use page::{Page, PageSummary, PageUpdateOptions, UpdatePage};
 pub use space::Space;
-pub use page::{ Page, PageSummary, UpdatePage, PageUpdateOptions };
 pub use transforms::FromElement;
 
+use std::io::Error as IoError;
 use std::result;
-use std::io::{ Error as IoError };
 
-use xmltree::Element;
-use self::rpser::xml::BuildElement;
-use self::rpser::{ RpcError, Method };
 use self::http::HttpError;
+use self::rpser::xml::BuildElement;
+use self::rpser::{Method, RpcError};
+use xmltree::Element;
 
-const V2_API_RPC_PATH: &'static str = "/rpc/soap-axis/confluenceservice-v2?wsdl";
+const V2_API_RPC_PATH: &str = "/rpc/soap-axis/confluenceservice-v2?wsdl";
 
 /// Client's session.
 pub struct Session {
@@ -60,7 +61,6 @@ impl Drop for Session {
 }
 
 impl Session {
-
     /**
     Create new confluence session.
 
@@ -75,16 +75,22 @@ impl Session {
     ```
     */
     pub fn login(url: &str, user: &str, pass: &str) -> Result<Session> {
-
         debug!("logging in at url {:?} with user {:?}", url, user);
 
-        let url = if url.ends_with("/") { &url[..url.len() - 1] } else { url };
+        let url = if url.ends_with('/') {
+            &url[..url.len() - 1]
+        } else {
+            url
+        };
         let wsdl_url = [url, V2_API_RPC_PATH].concat();
 
         debug!("getting wsdl from url {:?}", wsdl_url);
 
         let wsdl = try!(wsdl::fetch(&wsdl_url));
-        let mut session = Session { wsdl: wsdl, token: String::new() };
+        let mut session = Session {
+            wsdl,
+            token: String::new(),
+        };
 
         let response = try!(session.call(
             Method::new("login")
@@ -106,21 +112,19 @@ impl Session {
     ///
     /// This is done automatically at the end of Session's lifetime.
     pub fn logout(&self) -> Result<bool> {
-
         let response = try!(self.call(
-            Method::new("logout")
-                .with(Element::node("token").with_text(self.token.clone()))
+            Method::new("logout").with(Element::node("token").with_text(self.token.clone()))
         ));
 
         Ok(match try!(response.body.descend(&["logoutReturn"])).text {
             Some(ref v) if v == "true" => {
                 debug!("logged out successfully");
                 true
-            },
+            }
             _ => {
                 debug!("log out failed (maybe expired token, maybe not loged in)");
                 false
-            },
+            }
         })
     }
 
@@ -143,7 +147,6 @@ impl Session {
     ```
     */
     pub fn get_space(&self, space_key: &str) -> Result<Space> {
-
         let response = try!(self.call(
             Method::new("getSpace")
                 .with(Element::node("token").with_text(self.token.clone()))
@@ -170,7 +173,6 @@ impl Session {
     ```
     */
     pub fn get_page_by_title(&self, space_key: &str, page_title: &str) -> Result<Page> {
-
         let response = try!(self.call(
             Method::new("getPage")
                 .with(Element::node("token").with_text(self.token.clone()))
@@ -198,7 +200,6 @@ impl Session {
     ```
     */
     pub fn get_page_by_id(&self, page_id: i64) -> Result<Page> {
-
         let response = try!(self.call(
             Method::new("getPage")
                 .with(Element::node("token").with_text(self.token.clone()))
@@ -273,7 +274,6 @@ impl Session {
     ```
     */
     pub fn store_page(&self, page: UpdatePage) -> Result<Page> {
-
         let mut element_items = vec![
             Element::node("space").with_text(page.space),
             Element::node("title").with_text(page.title),
@@ -295,12 +295,7 @@ impl Session {
         let response = try!(self.call(
             Method::new("storePage")
                 .with(Element::node("token").with_text(self.token.clone()))
-                .with(
-                    Element::node("page")
-                        .with_children(
-                            element_items
-                        )
-                )
+                .with(Element::node("page").with_children(element_items))
         ));
 
         let element = try!(response.body.descend(&["storePageReturn"]));
@@ -314,7 +309,6 @@ impl Session {
     Same as `store_page`, but with additional update options parameter.
     */
     pub fn update_page(&self, page: UpdatePage, options: PageUpdateOptions) -> Result<Page> {
-
         let mut element_items = vec![
             Element::node("space").with_text(page.space),
             Element::node("title").with_text(page.title),
@@ -339,29 +333,17 @@ impl Session {
             update_options.push(Element::node("versionComment").with_text(comment));
         }
 
-        update_options.push(Element::node("minorEdit").with_text(
-            if options.minor_edit {
-                "true"
-            } else {
-                "false"
-            }
-        ));
+        update_options.push(Element::node("minorEdit").with_text(if options.minor_edit {
+            "true"
+        } else {
+            "false"
+        }));
 
         let response = try!(self.call(
             Method::new("updatePage")
                 .with(Element::node("token").with_text(self.token.clone()))
-                .with(
-                    Element::node("page")
-                        .with_children(
-                            element_items
-                        )
-                )
-                .with(
-                    Element::node("pageUpdateOptions")
-                        .with_children(
-                            update_options
-                        )
-                )
+                .with(Element::node("page").with_children(element_items))
+                .with(Element::node("pageUpdateOptions").with_children(update_options))
         ));
 
         let element = try!(response.body.descend(&["updatePageReturn"]));
@@ -384,7 +366,6 @@ impl Session {
     ```
     */
     pub fn get_children(&self, page_id: i64) -> Result<Vec<PageSummary>> {
-
         let response = try!(self.call(
             Method::new("getChildren")
                 .with(Element::node("token").with_text(self.token.clone()))
@@ -455,7 +436,7 @@ pub enum Error {
     ReceivedNoLoginToken,
     Io(IoError),
     Http(HttpError),
-    Rpc(RpcError),
+    Rpc(Box<RpcError>),
 }
 
 impl From<HttpError> for Error {
@@ -466,7 +447,7 @@ impl From<HttpError> for Error {
 
 impl From<RpcError> for Error {
     fn from(other: RpcError) -> Error {
-        Error::Rpc(other)
+        Error::Rpc(Box::new(other))
     }
 }
 

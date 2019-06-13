@@ -2,8 +2,8 @@
 
 pub mod xml;
 
-use std::result;
 use std::fmt;
+use std::result;
 
 use self::xml::BuildElement;
 use xmltree::Element;
@@ -41,11 +41,10 @@ impl Method {
             .with_attr(format!("xmlns:{}", namespace), api_url)
             .with_children(vec![
                 Element::node("soap:Header"),
-                Element::node("soap:Body")
-                    .with_child(
-                        Element::node(format!("{}:{}", namespace, self.name))
-                            .with_children_from_iter(self.args.iter())
-                    )
+                Element::node("soap:Body").with_child(
+                    Element::node(format!("{}:{}", namespace, self.name))
+                        .with_children_from_iter(self.args.iter()),
+                ),
             ]);
 
         envelope.to_string()
@@ -62,7 +61,7 @@ impl Response {
     /// Parse response from XML.
     pub fn from_xml(xml: &str) -> Result<Response> {
         let mut bytes = xml.as_bytes();
-        let mut element = Element::parse(&mut bytes);
+        let mut element = Element::parse(&mut bytes).unwrap();
 
         if element.name != "Envelope" {
             return Err(RpcError::UnexpectedElement { tag: element.name });
@@ -72,9 +71,13 @@ impl Response {
 
         if element.name == "Fault" {
             return Err(RpcError::Fault {
-                fault_code: try!(element.get_at_path(&["faultcode"])).text.unwrap_or(String::new()),
-                fault_string: try!(element.get_at_path(&["faultstring"])).text.unwrap_or(String::new()),
-                fault_detail: try!(element.get_at_path(&["detail"])),
+                fault_code: try!(element.get_at_path(&["faultcode"]))
+                    .text
+                    .unwrap_or_default(),
+                fault_string: try!(element.get_at_path(&["faultstring"]))
+                    .text
+                    .unwrap_or_default(),
+                fault_detail: Box::new(try!(element.get_at_path(&["detail"]))),
             });
         }
 
@@ -94,13 +97,23 @@ pub enum RpcError {
     Fault {
         fault_code: String,
         fault_string: String,
-        fault_detail: Element,
+        fault_detail: Box<Element>,
     },
-    XmlError { error: self::xml::Error },
-    ExpectedElementText { tag: String },
-    UnexpectedElement { tag: String },
-    ElementWasEmpty { name: String },
-    ElementNotFound { path: Vec<String> },
+    XmlError {
+        error: self::xml::Error,
+    },
+    ExpectedElementText {
+        tag: String,
+    },
+    UnexpectedElement {
+        tag: String,
+    },
+    ElementWasEmpty {
+        name: String,
+    },
+    ElementNotFound {
+        path: Vec<String>,
+    },
 }
 
 impl From<self::xml::Error> for RpcError {
@@ -111,11 +124,10 @@ impl From<self::xml::Error> for RpcError {
 
 pub type Result<T> = result::Result<T, RpcError>;
 
-
 #[cfg(test)]
 mod test {
-    use rpser::xml::BuildElement;
     use super::*;
+    use rpser::xml::BuildElement;
 
     #[test]
     fn can_deal_with_fault() {
@@ -135,11 +147,18 @@ mod test {
         "#;
 
         match Response::from_xml(faulty_response) {
-            Err(RpcError::Fault { fault_code, fault_string, .. }) => {
+            Err(RpcError::Fault {
+                fault_code,
+                fault_string,
+                ..
+            }) => {
                 assert_eq!(fault_code, "soapenv:Server.userException");
                 assert_eq!(fault_string, "com.atlassian.confluence.rpc.AuthenticationFailedException: Attempt to log in user 'ADUser' failed - incorrect username/password combination.");
-            },
-            other => panic!("expected to receive fault in this test, received {:?}", other),
+            }
+            other => panic!(
+                "expected to receive fault in this test, received {:?}",
+                other
+            ),
         };
     }
 
@@ -161,8 +180,11 @@ mod test {
                 let return_element = response.body.descend_first().unwrap();
                 assert_eq!(return_element.name, "loginReturn");
                 assert_eq!(return_element.text, Some("a3a8ecc6d5".into()));
-            },
-            other => panic!("expected to receive fault in this test, received {:?}", other),
+            }
+            other => panic!(
+                "expected to receive fault in this test, received {:?}",
+                other
+            ),
         };
     }
 }

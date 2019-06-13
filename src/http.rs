@@ -1,14 +1,10 @@
 //! HTTP helpers.
 
+use reqwest::header::{HeaderMap, HeaderName, HeaderValue, CONTENT_TYPE};
+pub use reqwest::Error as HttpError;
+pub use reqwest::StatusCode;
 use std::io::Read;
 use std::result;
-use hyper::Client;
-use hyper::header::ContentType;
-use hyper::mime::{Mime, TopLevel, SubLevel, Attr, Value};
-pub use hyper::status::StatusCode;
-pub use hyper::Error as HttpError;
-
-header! { (SoapAction, "SOAPAction") => [String] }
 
 /// Simplified HTTP response representation.
 #[derive(Debug)]
@@ -19,37 +15,35 @@ pub struct Response {
 
 /// Perform a GET request to specified URL.
 pub fn get(url: &str) -> Result<Response> {
-    let client = Client::new();
-    let mut response = try!(client.get(url).send());
-
+    let mut res = reqwest::get(url).unwrap();
     let mut body = String::new();
-    try!(response.read_to_string(&mut body));
+    res.read_to_string(&mut body).unwrap();
+    let status = res.status();
 
-    Ok(Response {
-        status: response.status,
-        body: body,
-    })
+    Ok(Response { status, body })
 }
 
 /// Perform a SOAP action to specified URL.
 pub fn soap_action(url: &str, action: &str, xml: &str) -> Result<Response> {
-    let client = Client::new();
-    let mut response = try!(
-        client.post(url)
-            .header(ContentType(Mime(TopLevel::Text, SubLevel::Xml,
-                     vec![(Attr::Charset, Value::Utf8)])))
-            .header(SoapAction(action.into()))
-            .body(xml)
-            .send()
-    );
+    let soap_action = HeaderName::from_bytes(b"SOAPAction").unwrap();
+    let soap_value = HeaderValue::from_str(action).unwrap();
+    let mut hmap = HeaderMap::new();
+    hmap.insert(CONTENT_TYPE, "text/xml; charset=utf-8".parse().unwrap());
+    hmap.insert(soap_action, soap_value);
+
+    let client = reqwest::Client::new();
+    let mut response = client
+        .post(url)
+        .headers(hmap)
+        .body(xml.to_string())
+        .send()
+        .unwrap();
 
     let mut body = String::new();
-    try!(response.read_to_string(&mut body));
+    response.read_to_string(&mut body).unwrap();
+    let status = response.status();
 
-    Ok(Response {
-        status: response.status,
-        body: body,
-    })
+    Ok(Response { status, body })
 }
 
 pub type Result<T> = result::Result<T, HttpError>;

@@ -1,15 +1,12 @@
-use xmltree::Element;
 use rpser::xml::BuildElement;
+use xmltree::Element;
 
-use {
-    Result,
-    Space,
-    Page,
-    PageSummary,
-};
+use {Page, PageSummary, Result, Space};
 
 pub trait FromElement {
-    fn from_element(element: Element) -> Result<Self> where Self: Sized;
+    fn from_element(element: Element) -> Result<Self>
+    where
+        Self: Sized;
 }
 
 impl FromElement for Space {
@@ -35,14 +32,30 @@ impl FromElement for Page {
             title: try!(element.get_at_path(&["title"]).and_then(|e| e.as_string())),
             url: try!(element.get_at_path(&["url"]).and_then(|e| e.as_string())),
             version: try!(element.get_at_path(&["version"]).and_then(|e| e.as_int())),
-            content: try!(element.get_at_path(&["content"]).and_then(|e| e.as_string())),
-            created: try!(element.get_at_path(&["created"]).and_then(|e| e.as_datetime())),
-            creator: try!(element.get_at_path(&["creator"]).and_then(|e| e.as_string())),
-            modified: try!(element.get_at_path(&["modified"]).and_then(|e| e.as_datetime())),
-            modifier: try!(element.get_at_path(&["modifier"]).and_then(|e| e.as_string())),
-            home_page: try!(element.get_at_path(&["homePage"]).and_then(|e| e.as_boolean())),
-            content_status: try!(element.get_at_path(&["contentStatus"]).and_then(|e| e.as_string())),
-            current: try!(element.get_at_path(&["current"]).and_then(|e| e.as_boolean())),
+            content: try!(element
+                .get_at_path(&["content"])
+                .and_then(|e| e.as_string())),
+            created: try!(element
+                .get_at_path(&["created"])
+                .and_then(|e| e.as_datetime())),
+            creator: try!(element
+                .get_at_path(&["creator"])
+                .and_then(|e| e.as_string())),
+            modified: try!(element
+                .get_at_path(&["modified"])
+                .and_then(|e| e.as_datetime())),
+            modifier: try!(element
+                .get_at_path(&["modifier"])
+                .and_then(|e| e.as_string())),
+            home_page: try!(element
+                .get_at_path(&["homePage"])
+                .and_then(|e| e.as_boolean())),
+            content_status: try!(element
+                .get_at_path(&["contentStatus"])
+                .and_then(|e| e.as_string())),
+            current: try!(element
+                .get_at_path(&["current"])
+                .and_then(|e| e.as_boolean())),
         })
     }
 }
