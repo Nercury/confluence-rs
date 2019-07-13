@@ -15,7 +15,7 @@ pub struct Response {
 
 /// Perform a GET request to specified URL.
 pub fn get(url: &str) -> Result<Response> {
-    let mut res = reqwest::get(url).unwrap();
+    let mut res = reqwest::get(url)?;
     let mut body = String::new();
     res.read_to_string(&mut body).unwrap();
     let status = res.status();
@@ -36,8 +36,7 @@ pub fn soap_action(url: &str, action: &str, xml: &str) -> Result<Response> {
         .post(url)
         .headers(hmap)
         .body(xml.to_string())
-        .send()
-        .unwrap();
+        .send()?;
 
     let mut body = String::new();
     response.read_to_string(&mut body).unwrap();
