@@ -79,19 +79,19 @@ impl Session {
 
         debug!("getting wsdl from url {:?}", wsdl_url);
 
-        let wsdl = try!(wsdl::fetch(&wsdl_url));
+        let wsdl = wsdl::fetch(&wsdl_url)?;
         let mut session = Session {
             wsdl,
             token: String::new(),
         };
 
-        let response = try!(session.call(
+        let response = session.call(
             Method::new("login")
                 .with(Element::node("username").with_text(user))
                 .with(Element::node("password").with_text(pass))
-        ));
+        )?;
 
-        let token = match try!(response.body.descend(&["loginReturn"])).text {
+        let token = match response.body.descend(&["loginReturn"])?.text {
             Some(token) => token,
             _ => return Err(Error::ReceivedNoLoginToken),
         };
@@ -105,11 +105,11 @@ impl Session {
     ///
     /// This is done automatically at the end of Session's lifetime.
     pub fn logout(&self) -> Result<bool> {
-        let response = try!(self.call(
+        let response = self.call(
             Method::new("logout").with(Element::node("token").with_text(self.token.clone()))
-        ));
+        )?;
 
-        Ok(match try!(response.body.descend(&["logoutReturn"])).text {
+        Ok(match response.body.descend(&["logoutReturn"])?.text {
             Some(ref v) if v == "true" => {
                 debug!("logged out successfully");
                 true
@@ -140,15 +140,15 @@ impl Session {
     ```
     */
     pub fn get_space(&self, space_key: &str) -> Result<Space> {
-        let response = try!(self.call(
+        let response = self.call(
             Method::new("getSpace")
                 .with(Element::node("token").with_text(self.token.clone()))
                 .with(Element::node("spaceKey").with_text(space_key))
-        ));
+        )?;
 
-        let element = try!(response.body.descend(&["getSpaceReturn"]));
+        let element = response.body.descend(&["getSpaceReturn"])?;
 
-        Ok(try!(Space::from_element(element)))
+        Ok(Space::from_element(element)?)
     }
 
     /**
@@ -166,16 +166,16 @@ impl Session {
     ```
     */
     pub fn get_page_by_title(&self, space_key: &str, page_title: &str) -> Result<Page> {
-        let response = try!(self.call(
+        let response = self.call(
             Method::new("getPage")
                 .with(Element::node("token").with_text(self.token.clone()))
                 .with(Element::node("spaceKey").with_text(space_key))
                 .with(Element::node("pageTitle").with_text(page_title))
-        ));
+        )?;
 
-        let element = try!(response.body.descend(&["getPageReturn"]));
+        let element = response.body.descend(&["getPageReturn"])?;
 
-        Ok(try!(Page::from_element(element)))
+        Ok(Page::from_element(element)?)
     }
 
     /**
@@ -193,15 +193,15 @@ impl Session {
     ```
     */
     pub fn get_page_by_id(&self, page_id: i64) -> Result<Page> {
-        let response = try!(self.call(
+        let response = self.call(
             Method::new("getPage")
                 .with(Element::node("token").with_text(self.token.clone()))
                 .with(Element::node("pageId").with_text(page_id.to_string()))
-        ));
+        )?;
 
-        let element = try!(response.body.descend(&["getPageReturn"]));
+        let element = response.body.descend(&["getPageReturn"])?;
 
-        Ok(try!(Page::from_element(element)))
+        Ok(Page::from_element(element)?)
     }
 
     /**
@@ -285,15 +285,15 @@ impl Session {
             element_items.push(Element::node("parentId").with_text(parent_id.to_string()));
         }
 
-        let response = try!(self.call(
+        let response = self.call(
             Method::new("storePage")
                 .with(Element::node("token").with_text(self.token.clone()))
                 .with(Element::node("page").with_children(element_items))
-        ));
+        )?;
 
-        let element = try!(response.body.descend(&["storePageReturn"]));
+        let element = response.body.descend(&["storePageReturn"])?;
 
-        Ok(try!(Page::from_element(element)))
+        Ok(Page::from_element(element)?)
     }
 
     /**
@@ -332,16 +332,16 @@ impl Session {
             "false"
         }));
 
-        let response = try!(self.call(
+        let response = self.call(
             Method::new("updatePage")
                 .with(Element::node("token").with_text(self.token.clone()))
                 .with(Element::node("page").with_children(element_items))
                 .with(Element::node("pageUpdateOptions").with_children(update_options))
-        ));
+        )?;
 
-        let element = try!(response.body.descend(&["updatePageReturn"]));
+        let element = response.body.descend(&["updatePageReturn"])?;
 
-        Ok(try!(Page::from_element(element)))
+        Ok(Page::from_element(element)?)
     }
 
     /**
@@ -359,18 +359,18 @@ impl Session {
     ```
     */
     pub fn get_children(&self, page_id: i64) -> Result<Vec<PageSummary>> {
-        let response = try!(self.call(
+        let response = self.call(
             Method::new("getChildren")
                 .with(Element::node("token").with_text(self.token.clone()))
                 .with(Element::node("pageId").with_text(page_id.to_string()))
-        ));
+        )?;
 
-        let element = try!(response.body.descend(&["getChildrenReturn"]));
+        let element = response.body.descend(&["getChildrenReturn"])?;
 
         let mut summaries = vec![];
 
         for element in element.children {
-            summaries.push(try!(PageSummary::from_element(element)));
+            summaries.push(PageSummary::from_element(element)?);
         }
 
         Ok(summaries)
@@ -414,11 +414,11 @@ impl Session {
             trace!("[method xml] {}", envelope);
         }
 
-        let http_response = try!(http::soap_action(url, &method.name, &envelope));
+        let http_response = http::soap_action(url, &method.name, &envelope)?;
 
         trace!("[response xml] {}", http_response.body);
 
-        Ok(try!(rpser::Response::from_xml(&http_response.body)))
+        Ok(rpser::Response::from_xml(&http_response.body)?)
     }
 }
 

@@ -249,7 +249,7 @@ impl BuildElement for Element {
     }
 
     fn as_int(&self) -> Result<i32, Error> {
-        let text = try!(get_typed_string(self, "int"));
+        let text = get_typed_string(self, "int")?;
         Ok(match text.parse() {
             Ok(ref value) => *value,
             Err(e) => {
@@ -262,7 +262,7 @@ impl BuildElement for Element {
     }
 
     fn as_long(&self) -> Result<i64, Error> {
-        let text = try!(get_typed_string(self, "long"));
+        let text = get_typed_string(self, "long")?;
         Ok(match text.parse() {
             Ok(ref value) => *value,
             Err(e) => {
@@ -279,7 +279,7 @@ impl BuildElement for Element {
     }
 
     fn as_datetime(&self) -> Result<DateTime<Utc>, Error> {
-        let text = try!(get_typed_string(self, "dateTime"));
+        let text = get_typed_string(self, "dateTime")?;
         Ok(match text.parse::<DateTime<Utc>>() {
             Ok(ref value) => *value,
             Err(e) => {
@@ -292,7 +292,7 @@ impl BuildElement for Element {
     }
 
     fn as_boolean(&self) -> Result<bool, Error> {
-        let text = try!(get_typed_string(self, "boolean"));
+        let text = get_typed_string(self, "boolean")?;
         Ok(text == "true")
     }
 }
