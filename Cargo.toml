@@ -6,7 +6,7 @@ description = "Access and modify Atlassian Confluence pages from Rust"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/Nercury/confluence-rs"
-documentation = "https://docs.rs/crate/confluence/0.3.0"
+documentation = "https://docs.rs/confluence"
 keywords = ["confluence", "atlassian", "api", "soap", "wiki"]
 categories = ["api-bindings"]
 

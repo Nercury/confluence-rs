@@ -37,7 +37,7 @@ fn main() {
 
 ## Reference
 
-Read __[full documentation](https://docs.rs/crate/confluence/0.3.0)__.
+Read __[full documentation](https://docs.rs/confluence)__.
 
 ## License
 
