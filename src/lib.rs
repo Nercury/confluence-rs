@@ -24,10 +24,12 @@ pub mod rpser;
 pub mod wsdl;
 
 mod page;
+mod server;
 mod space;
 mod transforms;
 
 pub use page::{Page, PageSummary, PageUpdateOptions, UpdatePage};
+pub use server::ServerInfo;
 pub use space::Space;
 pub use transforms::FromElement;
 
@@ -45,6 +47,7 @@ const V2_API_RPC_PATH: &str = "/rpc/soap-axis/confluenceservice-v2?wsdl";
 pub struct Session {
     wsdl: wsdl::Wsdl,
     token: String,
+    server_info: Option<ServerInfo>,
 }
 
 impl Drop for Session {
@@ -83,6 +86,7 @@ impl Session {
         let mut session = Session {
             wsdl,
             token: String::new(),
+            server_info: None,
         };
 
         let response = session.call(
@@ -97,6 +101,11 @@ impl Session {
         };
 
         session.token = token;
+
+        match session.get_server_info() {
+            Ok(result) => session.server_info = Some(result),
+            Err(e) => return Err(e),
+        }
 
         Ok(session)
     }
@@ -119,6 +128,21 @@ impl Session {
                 false
             }
         })
+    }
+
+    /**
+     * getServerInfo()
+     * retrieve some basic information about the server being connected to. Useful for clients that need to turn certain features on or off depending on the version of the server. (Since 1.0.3)
+     */
+    pub fn get_server_info(&self) -> Result<ServerInfo> {
+        let response = self.call(
+            Method::new("getServerInfo")
+                .with(Element::node("token").with_text(&self.token))
+        )?;
+
+        let element = response.body.descend(&["getServerInfoReturn"])?;
+
+        Ok(ServerInfo::from_element(element)?)
     }
 
     /**

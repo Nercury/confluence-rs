@@ -1,12 +1,25 @@
 use rpser::xml::BuildElement;
 use xmltree::Element;
 
-use {Page, PageSummary, Result, Space};
+use {Page, PageSummary, Result, ServerInfo, Space};
 
 pub trait FromElement {
     fn from_element(element: Element) -> Result<Self>
     where
         Self: Sized;
+}
+
+impl FromElement for ServerInfo {
+    fn from_element(element: Element) -> Result<ServerInfo> {
+        Ok(ServerInfo {
+            major_version: element.get_at_path(&["majorVersion"]).and_then(|e| e.as_int())?,
+            minor_version: element.get_at_path(&["minorVersion"]).and_then(|e| e.as_int())?,
+            patch_level: element.get_at_path(&["patchLevel"]).and_then(|e| e.as_int())?,
+            build_id: element.get_at_path(&["buildId"]).and_then(|e| e.as_string())?,
+            development_build: element.get_at_path(&["developmentBuild"]).and_then(|e| e.as_boolean())?,
+            base_url: element.get_at_path(&["baseUrl"]).and_then(|e| e.as_string())?,
+        })
+    }
 }
 
 impl FromElement for Space {
