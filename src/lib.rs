@@ -400,6 +400,28 @@ impl Session {
         Ok(summaries)
     }
 
+    /**
+     * getDescendents
+     * returns all the descendants of this page (children, children's children etc).
+     */
+    pub fn get_descendents(&self, page_id: i64) -> Result<Vec<PageSummary>> {
+        let response = self.call(
+            Method::new("getDescendents")
+                .with(Element::node("token").with_text(&self.token))
+                .with(Element::node("pageId").with_text(page_id.to_string()))
+        )?;
+
+        let element = response.body.descend(&["getDescendentsReturn"])?;
+
+        let mut summaries = vec![];
+
+        for element in element.children {
+            summaries.push(PageSummary::from_element(element)?);
+        }
+
+        Ok(summaries)
+    }
+
     /// Call a custom method on this session.
     ///
     /// ## Usage
